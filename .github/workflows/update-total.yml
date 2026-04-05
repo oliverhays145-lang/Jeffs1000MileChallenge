@@ -18,18 +18,19 @@ jobs:
       - name: Fetch JustGiving total and update index.html
         run: |
           # Fetch the JustGiving page
-          HTML=$(curl -s -A "Mozilla/5.0" "https://www.justgiving.com/page/jeff-lancaster-1000")
+          HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "https://www.justgiving.com/page/jeff-lancaster-1000")
 
-          # Extract the raised amount - look for common patterns in JustGiving HTML
+          # DEBUG: Print lines containing money-related keywords
+          echo "=== DEBUG: searching for amount fields ==="
+          echo "$HTML" | grep -i "raised\|amount\|total\|£\|target" | head -20
+          echo "=== END DEBUG ==="
+
+          # Try various field name patterns
           RAISED=$(echo "$HTML" | grep -oP '(?<="totalRaisedAmount":)\d+(\.\d+)?' | head -1)
-
-          # Fallback patterns
-          if [ -z "$RAISED" ]; then
-            RAISED=$(echo "$HTML" | grep -oP '(?<="raisedAmount":)\d+(\.\d+)?' | head -1)
-          fi
-          if [ -z "$RAISED" ]; then
-            RAISED=$(echo "$HTML" | grep -oP '(?<=grandTotalRaisedExcludingGiftAid":)\d+(\.\d+)?' | head -1)
-          fi
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="raisedAmount":)\d+(\.\d+)?' | head -1); fi
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="grandTotalRaisedExcludingGiftAid":)\d+(\.\d+)?' | head -1); fi
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="amountRaised":)\d+(\.\d+)?' | head -1); fi
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="raised":)\d+(\.\d+)?' | head -1); fi
 
           echo "Raised amount found: $RAISED"
 
@@ -43,9 +44,8 @@ jobs:
           DISPLAY="£${FORMATTED}"
           echo "Formatted: $DISPLAY"
 
-          # Update the value in index.html between the jg-total tags
+          # Update the value in index.html
           sed -i "s|<div id=\"jg-total\"[^>]*>[^<]*</div>|<div id=\"jg-total\" style=\"font-size:3rem;font-weight:900;color:#06b6d4;line-height:1\">${DISPLAY}</div>|" index.html
-
           echo "Updated index.html with $DISPLAY"
 
       - name: Commit and push if changed
