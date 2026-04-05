@@ -2,8 +2,8 @@ name: Update JustGiving Total
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Every 30 minutes
-  workflow_dispatch:          # Allow manual trigger
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 jobs:
   update:
@@ -17,20 +17,18 @@ jobs:
 
       - name: Fetch JustGiving total and update index.html
         run: |
-          # Fetch the JustGiving page
-          HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "https://www.justgiving.com/page/jeff-lancaster-1000")
+          # Try JustGiving's internal API
+          RESPONSE=$(curl -s "https://api.justgiving.com/bb6edbbb/v1/fundraising/pages/jeff-lancaster-1000" \
+            -H "Accept: application/json" \
+            -H "x-api-key: bb6edbbb")
 
-          # DEBUG: Print lines containing money-related keywords
-          echo "=== DEBUG: searching for amount fields ==="
-          echo "$HTML" | grep -i "raised\|amount\|total\|£\|target" | head -20
-          echo "=== END DEBUG ==="
+          echo "=== API RESPONSE ==="
+          echo "$RESPONSE" | head -c 1000
+          echo "=== END ==="
 
-          # Try various field name patterns
-          RAISED=$(echo "$HTML" | grep -oP '(?<="totalRaisedAmount":)\d+(\.\d+)?' | head -1)
-          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="raisedAmount":)\d+(\.\d+)?' | head -1); fi
-          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="grandTotalRaisedExcludingGiftAid":)\d+(\.\d+)?' | head -1); fi
-          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="amountRaised":)\d+(\.\d+)?' | head -1); fi
-          if [ -z "$RAISED" ]; then RAISED=$(echo "$HTML" | grep -oP '(?<="raised":)\d+(\.\d+)?' | head -1); fi
+          RAISED=$(echo "$RESPONSE" | grep -oP '(?<="grandTotalRaisedExcludingGiftAid":)\d+(\.\d+)?' | head -1)
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$RESPONSE" | grep -oP '(?<="totalRaised":)\d+(\.\d+)?' | head -1); fi
+          if [ -z "$RAISED" ]; then RAISED=$(echo "$RESPONSE" | grep -oP '(?<="raisedAmount":)\d+(\.\d+)?' | head -1); fi
 
           echo "Raised amount found: $RAISED"
 
@@ -39,12 +37,9 @@ jobs:
             exit 0
           fi
 
-          # Format as £X,XXX
           FORMATTED=$(printf "%.0f" "$RAISED" | sed ':a;s/\B[0-9]\{3\}\b/,&/;ta')
           DISPLAY="£${FORMATTED}"
-          echo "Formatted: $DISPLAY"
 
-          # Update the value in index.html
           sed -i "s|<div id=\"jg-total\"[^>]*>[^<]*</div>|<div id=\"jg-total\" style=\"font-size:3rem;font-weight:900;color:#06b6d4;line-height:1\">${DISPLAY}</div>|" index.html
           echo "Updated index.html with $DISPLAY"
 
