@@ -1,0 +1,58 @@
+name: Update JustGiving Total
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:          # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch JustGiving total and update index.html
+        run: |
+          # Fetch the JustGiving page
+          HTML=$(curl -s -A "Mozilla/5.0" "https://www.justgiving.com/page/jeff-lancaster-1000")
+
+          # Extract the raised amount - look for common patterns in JustGiving HTML
+          RAISED=$(echo "$HTML" | grep -oP '(?<="totalRaisedAmount":)\d+(\.\d+)?' | head -1)
+
+          # Fallback patterns
+          if [ -z "$RAISED" ]; then
+            RAISED=$(echo "$HTML" | grep -oP '(?<="raisedAmount":)\d+(\.\d+)?' | head -1)
+          fi
+          if [ -z "$RAISED" ]; then
+            RAISED=$(echo "$HTML" | grep -oP '(?<=grandTotalRaisedExcludingGiftAid":)\d+(\.\d+)?' | head -1)
+          fi
+
+          echo "Raised amount found: $RAISED"
+
+          if [ -z "$RAISED" ]; then
+            echo "Could not find raised amount, skipping update"
+            exit 0
+          fi
+
+          # Format as £X,XXX
+          FORMATTED=$(printf "%.0f" "$RAISED" | sed ':a;s/\B[0-9]\{3\}\b/,&/;ta')
+          DISPLAY="£${FORMATTED}"
+          echo "Formatted: $DISPLAY"
+
+          # Update the value in index.html between the jg-total tags
+          sed -i "s|<div id=\"jg-total\"[^>]*>[^<]*</div>|<div id=\"jg-total\" style=\"font-size:3rem;font-weight:900;color:#06b6d4;line-height:1\">${DISPLAY}</div>|" index.html
+
+          echo "Updated index.html with $DISPLAY"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && echo "No changes" && exit 0
+          git add index.html
+          git commit -m "Update JustGiving total [skip ci]"
+          git push
