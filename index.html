@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Jeff's Big Walk – Land's End to John O'Groats</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f0f1a;color:#f1ede4;font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+.nav{position:sticky;top:0;z-index:99;background:rgba(15,15,26,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;padding:0}
+.nav-row1{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;height:48px;gap:.5rem;width:100%}
+.nav-row2{display:flex;align-items:center;padding:0 1rem;border-top:1px solid rgba(255,255,255,.06);width:100%}
+.nav-logo{font-weight:800;font-size:1rem;white-space:nowrap}
+.nav-logo span{color:#06b6d4}
+.nav-tabs{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{border:none;background:transparent;color:#6b7280;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s}
+.nav-tab.active{color:#06b6d4;border-bottom-color:#06b6d4}
+.nav-donate{background:#7c3aed;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;display:block;text-decoration:none}
+.hero{background:radial-gradient(ellipse at 50% 100%,rgba(124,58,237,.28) 0%,transparent 65%),radial-gradient(ellipse at 20% 20%,rgba(6,182,212,.12) 0%,transparent 50%),#0f0f1a;padding:2rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.5);border-radius:999px;padding:5px 15px;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c4b5fd;margin-bottom:.8rem}
+.hero h1{font-size:clamp(2rem,7vw,4rem);font-weight:800;line-height:1;letter-spacing:-.02em;margin-bottom:.5rem}
+.hero h1 span{color:#06b6d4}
+.hero-sub{font-size:.88rem;color:rgba(241,237,228,.62);max-width:420px;margin:0 auto .8rem;line-height:1.6;font-weight:400}
+.jg-hero-wrap{max-width:420px;margin:0 auto 1.2rem;border-radius:14px;overflow:hidden;background:#fff;border:2px solid rgba(124,58,237,.5);box-shadow:0 0 40px rgba(124,58,237,.2)}
+.jg-wrap{max-width:420px;margin:0 auto 1.5rem;border-radius:14px;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.35)}
+.social-row{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.btn{border:none;border-radius:8px;padding:10px 20px;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:opacity .15s;text-decoration:none}
+.btn:hover{opacity:.85}
+.btn-purple{background:#7c3aed;color:#fff}
+.btn-orange{background:#fc4c02;color:#fff}
+.btn-pink{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
+.btn-outline{background:transparent;color:#f1ede4;border:1.5px solid rgba(241,237,228,.25)}
+.btn-teal{background:transparent;color:#06b6d4;border:1.5px solid rgba(6,182,212,.4)}
+.btn-sm{padding:7px 14px;font-size:.7rem}
+.progress-bar-section{background:#16162a;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:1.8rem 1.5rem}
+.progress-inner{max-width:860px;margin:0 auto}
+.progress-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:.6rem;flex-wrap:wrap;gap:.3rem}
+.progress-title{font-size:.8rem;font-weight:700;letter-spacing:.04em;color:rgba(241,237,228,.8)}
+.progress-pct{font-size:1.6rem;font-weight:900;color:#06b6d4}
+.progress-track{height:12px;background:rgba(255,255,255,.07);border-radius:999px;position:relative;overflow:visible;margin-bottom:.6rem}
+.progress-fill{position:absolute;top:0;left:0;bottom:0;background:linear-gradient(90deg,#7c3aed,#06b6d4);border-radius:999px;transition:width 1.2s ease}
+.progress-boot{position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:1.1rem}
+.waypoints{display:flex;justify-content:space-between;font-size:.62rem;color:#6b7280;letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:.2rem}
+.waypoints .now{color:#06b6d4;font-weight:700}
+.countdown-wrap{background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(6,182,212,.08));border-bottom:1px solid rgba(124,58,237,.2);padding:1.5rem;text-align:center}
+.cd-label{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c4b5fd;margin-bottom:.8rem}
+.cd-grid{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap}
+.cd-unit{text-align:center}
+.cd-num{font-size:2.4rem;font-weight:900;color:#06b6d4;line-height:1;min-width:2.5rem}
+.cd-secs .cd-num{color:#7c3aed}
+.cd-lbl{font-size:.6rem;color:#6b7280;text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+.section{padding:2.8rem 1.5rem;max-width:1000px;margin:0 auto}
+.section-alt{background:#16162a;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.section-alt .section{margin:0 auto}
+.eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#06b6d4;margin-bottom:.4rem}
+.section-title{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;line-height:1.1;margin-bottom:1rem;letter-spacing:-.01em}
+.section-title span{color:#06b6d4}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.grid-3{grid-template-columns:1fr}}
+.card{background:#16162a;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1.2rem}
+.card2{background:#1e1e35;border:1px solid rgba(255,255,255,.05);border-radius:11px;padding:1.1rem 1.3rem}
+.stat-card{text-align:center;padding:1.3rem}
+.stat-big{font-size:2.2rem;font-weight:900;color:#06b6d4;line-height:1}
+.stat-lbl{font-size:.65rem;color:#6b7280;margin-top:.4rem;letter-spacing:.08em;text-transform:uppercase;line-height:1.4}
+.quote{background:#16162a;border-left:3px solid #7c3aed;border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin-top:1.3rem;font-style:italic;font-size:1.05rem;line-height:1.55;color:#f1ede4}
+.expect-icon{font-size:1.8rem;margin-bottom:.6rem;display:block}
+.expect-card h4{font-size:.92rem;font-weight:700;margin-bottom:.4rem}
+.expect-card p{font-size:.82rem;color:rgba(241,237,228,.62);line-height:1.6}
+.route-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:#16162a;margin-bottom:.7rem}
+.route-item.done{border-color:rgba(16,185,129,.3)}
+.route-item.current{border-color:#06b6d4;background:rgba(6,182,212,.06)}
+.route-item.upcoming{opacity:.65}
+.route-num{font-size:1.6rem;font-weight:900;min-width:2.2rem;text-align:center;line-height:1}
+.route-num.done{color:#10b981}
+.route-num.current{color:#06b6d4}
+.route-num.upcoming{color:#6b7280}
+.route-info h4{font-size:.93rem;font-weight:700;margin-bottom:.2rem}
+.route-info p{font-size:.78rem;color:#6b7280;line-height:1.4}
+.route-right{margin-left:auto;text-align:right;flex-shrink:0}
+.route-mile{font-size:.68rem;color:#6b7280;margin-bottom:.3rem}
+.route-badge{font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.badge-done{background:rgba(16,185,129,.15);color:#10b981}
+.badge-now{background:rgba(6,182,212,.15);color:#06b6d4}
+.badge-next{background:rgba(107,114,128,.15);color:#6b7280}
+.fact-num{font-size:2.8rem;font-weight:900;line-height:1;background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.fact-p{font-size:.8rem;color:rgba(241,237,228,.62);margin-top:.5rem;line-height:1.55}
+.stats-placeholder{background:rgba(6,182,212,.05);border:2px dashed rgba(6,182,212,.3);border-radius:14px;padding:3rem 2rem;text-align:center}
+.sheet-iframe{width:100%;min-height:600px;border:none;border-radius:12px;display:block}
+footer{background:#08080f;border-top:1px solid rgba(255,255,255,.05);padding:2rem 1.5rem;text-align:center;font-size:.76rem;color:#6b7280}
+footer .links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:.6rem 0}
+footer a{color:#06b6d4}
+.body-text{font-size:.93rem;color:rgba(241,237,228,.72);line-height:1.78;margin-bottom:.9rem}
+.link-orange{color:#fc4c02;font-weight:700}
+.link-pink{color:#e1306c;font-weight:700}
+.sharebox{background:rgba(255,255,255,.04);border-radius:8px;padding:.7rem 1rem;font-family:monospace;font-size:.82rem;color:#06b6d4;letter-spacing:.02em;user-select:all;word-break:break-all}
+.tab-content{display:none}
+.tab-content.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-row1">
+    <div class="nav-logo">🥾 <span>Jeff's</span> Big Walk</div>
+    <a href="https://www.justgiving.com/page/jeff-lancaster-1000" target="_blank" class="btn btn-purple nav-donate">💜 Donate</a>
+  </div>
+  <div class="nav-row2">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('overview',this)">Overview</button>
+      <button class="nav-tab" onclick="showTab('route',this)">Route</button>
+      <button class="nav-tab" onclick="showTab('cause',this)">The Cause</button>
+      <button class="nav-tab" onclick="showTab('stats',this)">Walking Stats</button>
+      <button class="nav-tab" onclick="showTab('donate',this)">Donate</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO — JustGiving widget is the first thing you see -->
+<div class="hero">
+  <div class="hero-grid"></div>
+
+  <!-- JustGiving live total -->
+  <div class="jg-hero-wrap" style="padding:1.5rem;text-align:center">
+    <div style="font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#7c3aed;margin-bottom:.4rem">Raised so far</div>
+    <div id="jg-total" style="font-size:3rem;font-weight:900;color:#06b6d4;line-height:1">£0</div>
+    <div style="font-size:.75rem;color:#6b7280;margin:.4rem 0 1rem">of <span id="jg-target">£20,000</span> target</div>
+    <div style="background:rgba(255,255,255,.07);border-radius:999px;height:10px;overflow:hidden;margin-bottom:1rem">
+      <div id="jg-bar" style="height:100%;background:linear-gradient(90deg,#7c3aed,#06b6d4);border-radius:999px;width:0%;transition:width 1s ease"></div>
+    </div>
+    <a href="https://www.justgiving.com/page/jeff-lancaster-1000" target="_blank" class="btn btn-purple" style="width:100%;justify-content:center;font-size:.88rem;padding:12px">💜 Donate to Jeff's Walk</a>
+  </div>
+
+  <div class="badge">🎗️ Fundraising for The Brain Tumour Charity</div>
+  <h1>Land's End<br><span>→</span> John O'Groats</h1>
+  <p class="hero-sub">Jeff Lancaster is walking 1,000 miles the length of Britain — 20 miles a day — starting 17 May 2026. Follow every step.</p>
+
+  <div class="social-row">
+    <a href="https://strava.app.link/ZMR5J2Lz51b" target="_blank" class="btn btn-orange">🏃 Strava</a>
+    <a href="https://www.instagram.com/jefflancaster1000" target="_blank" class="btn btn-pink">📸 Instagram</a>
+    <a href="https://www.justgiving.com/page/jeff-lancaster-1000" target="_blank" class="btn btn-outline">💜 JustGiving</a>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-section">
+  <div class="progress-inner">
+    <div class="progress-hdr">
+      <div>
+        <div class="progress-title">Journey Progress · Land's End → John O'Groats</div>
+        <div id="progress-miles-text" style="font-size:.72rem;color:#6b7280;margin-top:2px">Starts 17 May 2026</div>
+      </div>
+      <div id="progress-pct-text" class="progress-pct">0%</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%">
+        <span class="progress-boot">🥾</span>
+      </div>
+    </div>
+    <div class="waypoints">
+      <span>Land's End</span>
+      <span>Bristol</span>
+      <span>Shropshire</span>
+      <span>Lake Dist.</span>
+      <span>Glasgow</span>
+      <span>J O'Groats</span>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-wrap" id="countdown-section">
+  <div class="cd-label">⏳ Jeff starts his walk on 17 May 2026 at 7am</div>
+  <div class="cd-grid">
+    <div class="cd-unit"><div class="cd-num" id="cd-days">—</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-hours">—</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-mins">—</div><div class="cd-lbl">Mins</div></div>
+    <div class="cd-unit cd-secs"><div class="cd-num" id="cd-secs">—</div><div class="cd-lbl">Secs</div></div>
+  </div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div id="tab-overview" class="tab-content active">
+  <div class="section">
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow">Why He's Doing It</div>
+        <h2 class="section-title">A Walk With <span>Purpose</span></h2>
+        <p class="body-text">Jeff Lancaster is walking the full length of Britain — roughly 1,000 miles from the granite cliffs of Land's End to the windswept tip of John O'Groats — in support of <strong>The Brain Tumour Charity</strong>.</p>
+        <p class="body-text">Brain tumours are the biggest cancer killer of children and adults under 40 in the UK, yet receive just 1% of national cancer research funding. Jeff is putting one foot in front of the other to help change that.</p>
+        <p class="body-text">Follow along on <a href="https://strava.app.link/ZMR5J2Lz51b" target="_blank" class="link-orange">Strava</a> as Jeff logs every mile, and on <a href="https://www.instagram.com/jefflancaster1000" target="_blank" class="link-pink">Instagram @jefflancaster1000</a> for daily dispatches from the road.</p>
+        <div class="quote">"Every step is a mile closer to a cure."</div>
+      </div>
+      <div class="grid-4">
+        <div class="card stat-card"><div class="stat-big">~1,000</div><div class="stat-lbl">Miles of Britain</div></div>
+        <div class="card stat-card"><div class="stat-big">16,000+</div><div class="stat-lbl">UK brain tumour diagnoses per year</div></div>
+        <div class="card stat-card"><div class="stat-big">1%</div><div class="stat-lbl">Of UK cancer research spend</div></div>
+        <div class="card stat-card"><div class="stat-big">~50</div><div class="stat-lbl">Days estimated on the road</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-alt">
+    <div class="section">
+      <div class="eyebrow">What Jeff's Facing</div>
+      <h2 class="section-title">Life on the <span>Road</span></h2>
+      <div class="grid-3" style="margin-top:1.2rem">
+        <div class="card2 expect-card"><span class="expect-icon">📏</span><h4>~20 miles a day</h4><p>Twenty miles of Britain, every single day, for weeks on end.</p></div>
+        <div class="card2 expect-card"><span class="expect-icon">🥾</span><h4>Blisters & worn boots</h4><p>The physical reality of 1,000 miles under your feet.</p></div>
+        <div class="card2 expect-card"><span class="expect-icon">🌧️</span><h4>British weather</h4><p>Rain, hail, wind — Jeff walks through all of it, every day.</p></div>
+        <div class="card2 expect-card"><span class="expect-icon">🏔️</span><h4>Mountains & moorland</h4><p>Dartmoor, Pennines, Shap Fell, the Highland passes.</p></div>
+        <div class="card2 expect-card"><span class="expect-icon">🌅</span><h4>Breathtaking sunrises</h4><p>Miles of open countryside, birdsong, and real solitude.</p></div>
+        <div class="card2 expect-card"><span class="expect-icon">🫶</span><h4>Your support keeps him going</h4><p>Every donation and message pushes Jeff another mile.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="text-align:center">
+    <div class="eyebrow">Follow Along</div>
+    <h2 class="section-title" style="margin-bottom:.6rem">Stay <span>Connected</span></h2>
+    <p style="color:#6b7280;font-size:.88rem;margin-bottom:1.5rem">Every platform, live and clickable.</p>
+    <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
+      <a href="https://www.justgiving.com/page/jeff-lancaster-1000" target="_blank" class="btn btn-purple" style="font-size:.88rem;padding:12px 24px">💜 JustGiving</a>
+      <a href="https://strava.app.link/ZMR5J2Lz51b" target="_blank" class="btn btn-orange" style="font-size:.88rem;padding:12px 24px">🏃 Strava</a>
+      <a href="https://www.instagram.com/jefflancaster1000" target="_blank" class="btn btn-pink" style="font-size:.88rem;padding:12px 24px">📸 Instagram</a>
+    </div>
+  </div>
+</div>
+
+<!-- ROUTE TAB -->
+<div id="tab-route" class="tab-content">
+  <div class="section">
+    <div class="eyebrow">The Route</div>
+    <h2 class="section-title">Land's End <span>→</span> John O'Groats</h2>
+    <p style="color:#6b7280;font-size:.88rem;margin-bottom:1.5rem;max-width:480px">~1,000 miles through some of Britain's most beautiful and demanding terrain.</p>
+    <div id="route-list"></div>
+  </div>
+</div>
+
+<!-- THE CAUSE TAB -->
+<div id="tab-cause" class="tab-content">
+  <div style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.06));border-bottom:1px solid rgba(124,58,237,.2);padding:2.8rem 1.5rem">
+    <div style="max-width:1000px;margin:0 auto">
+      <div class="eyebrow">The Cause</div>
+      <h2 class="section-title">Why Brain Tumours?</h2>
+      <p class="body-text" style="max-width:580px">Brain tumours are one of the most underfunded and deadly cancers in the UK. Despite being the leading cancer killer of under-40s, research funding has historically been woefully low.</p>
+      <div class="grid-4" style="margin-top:1.5rem;max-width:700px">
+        <div style="text-align:center;padding:1.2rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.06)"><div class="fact-num">#1</div><p class="fact-p">Biggest cancer killer of children and adults under 40 in the UK</p></div>
+        <div style="text-align:center;padding:1.2rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.06)"><div class="fact-num">16k</div><p class="fact-p">People diagnosed with a brain tumour in the UK every year</p></div>
+        <div style="text-align:center;padding:1.2rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.06)"><div class="fact-num">1%</div><p class="fact-p">Of national cancer research funding goes to brain tumours</p></div>
+        <div style="text-align:center;padding:1.2rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.06)"><div class="fact-num">12%</div><p class="fact-p">5-year survival rate for glioblastoma — the most aggressive form</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow">The Charity</div>
+        <h3 style="font-size:1.5rem;font-weight:800;margin-bottom:.9rem">The Brain Tumour Charity</h3>
+        <p class="body-text">The Brain Tumour Charity is the world's leading brain tumour charity, funding cutting-edge research, driving improvements in treatment, and supporting everyone affected by a brain tumour.</p>
+        <p class="body-text">They campaign for greater investment, fight for better treatment options, and support the thousands of patients and families living with this devastating disease.</p>
+        <a href="https://www.thebraintumourcharity.org" target="_blank" class="btn btn-outline" style="margin-top:.8rem;font-size:.8rem">Learn More at The Brain Tumour Charity →</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div class="card2" style="display:flex;gap:.7rem;align-items:flex-start"><span style="color:#7c3aed;margin-top:2px;flex-shrink:0">⬟</span><span style="font-size:.85rem;color:rgba(241,237,228,.75);line-height:1.6">Brain tumours kill more children and adults under 40 than any other cancer</span></div>
+        <div class="card2" style="display:flex;gap:.7rem;align-items:flex-start"><span style="color:#7c3aed;margin-top:2px;flex-shrink:0">⬟</span><span style="font-size:.85rem;color:rgba(241,237,228,.75);line-height:1.6">Just 1% of the national spend on cancer research is allocated to brain tumours</span></div>
+        <div class="card2" style="display:flex;gap:.7rem;align-items:flex-start"><span style="color:#7c3aed;margin-top:2px;flex-shrink:0">⬟</span><span style="font-size:.85rem;color:rgba(241,237,228,.75);line-height:1.6">Fewer than 20% of those diagnosed survive beyond 5 years</span></div>
+        <div class="card2" style="display:flex;gap:.7rem;align-items:flex-start"><span style="color:#7c3aed;margin-top:2px;flex-shrink:0">⬟</span><span style="font-size:.85rem;color:rgba(241,237,228,.75);line-height:1.6">Around 16,000 people are diagnosed with a brain tumour in the UK every year</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WALKING STATS TAB -->
+<div id="tab-stats" class="tab-content">
+  <div class="section">
+    <div class="eyebrow">Live Data</div>
+    <h2 class="section-title">Walking <span>Stats</span></h2>
+    <p style="color:#6b7280;font-size:.88rem;margin-bottom:1.8rem;max-width:520px">Jeff's daily progress — every leg, every mile, updated live from Google Sheets.</p>
+
+    <!-- Live sheet — shown when SHEET_ID is set -->
+    <div id="stats-live" style="display:none;margin-bottom:1.5rem">
+      <iframe id="sheet-iframe" class="sheet-iframe" src="" title="Jeff's Walking Stats"></iframe>
+    </div>
+
+    <!-- Placeholder — shown until SHEET_ID is set -->
+    <div id="stats-placeholder" class="stats-placeholder">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">📊</div>
+      <div style="font-weight:700;font-size:1.1rem;margin-bottom:.5rem;color:#f1ede4">Stats coming soon</div>
+      <p style="font-size:.85rem;color:#6b7280;max-width:360px;margin:0 auto 1.5rem;line-height:1.6">Jeff's live walking data will appear here once the walk begins on 17 May 2026.</p>
+      <a href="https://strava.app.link/ZMR5J2Lz51b" target="_blank" class="btn btn-orange">🏃 Follow Jeff on Strava in the meantime</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- DONATE TAB -->
+<div id="tab-donate" class="tab-content">
+  <div class="section" style="max-width:520px">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div class="eyebrow">JustGiving</div>
+      <h2 class="section-title">Support <span>Jeff's Walk</span></h2>
+      <p style="color:#6b7280;font-size:.88rem">Donate directly via Jeff's official JustGiving page.</p>
+    </div>
+    <div class="jg-wrap">
+      <div id="jg-widget-jeff-lancaster-1000-64b"></div><script>(function(){var id="jg-widget-jeff-lancaster-1000-64b",doc=document,pfx=(window.location.toString().indexOf("https")==0)?"https":"http";var el=doc.getElementById(id);if(el){var js=doc.createElement('script');js.src=pfx+"://widgets.justgiving.com/fundraisingpage/jeff-lancaster-1000?enc=ZT1qZy13aWRnZXQtamVmZi1sYW5jYXN0ZXItMTAwMC02NCZ3PTQwMCZiPWltYWdlLGRvbmF0ZSxmdW5kcmFpc2UmaWI9dGl0bGUsc3VtbWFyeSxwcm9ncmVzcyxyYWlzZWQsdGFyZ2V0";el.parentNode.insertBefore(js, el);}})();</script>
+    </div>
+    <div class="card2" style="text-align:center;padding:1.5rem">
+      <div style="font-weight:700;font-size:.95rem;margin-bottom:.5rem">Can't donate? Share instead!</div>
+      <p style="font-size:.82rem;color:#6b7280;margin-bottom:.8rem">Sharing Jeff's page with one friend could double his total.</p>
+      <div class="sharebox">justgiving.com/page/jeff-lancaster-1000</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-size:1.4rem;margin-bottom:.5rem">🎗️</div>
+  <div>Built to support <strong style="color:#f1ede4">Jeff Lancaster</strong> raising money for The Brain Tumour Charity</div>
+  <div class="links">
+    <a href="https://www.justgiving.com/page/jeff-lancaster-1000" target="_blank">JustGiving</a>
+    <a href="https://strava.app.link/ZMR5J2Lz51b" target="_blank" style="color:#fc4c02">Strava</a>
+    <a href="https://www.instagram.com/jefflancaster1000" target="_blank" style="color:#e1306c">Instagram</a>
+    <a href="https://www.thebraintumourcharity.org" target="_blank" style="color:#c4b5fd">The Brain Tumour Charity</a>
+  </div>
+  <div style="opacity:.4;margin-top:.5rem">Every mile matters · Every pound matters</div>
+</footer>
+
+<script>
+const START_DATE  = new Date('2026-05-17T07:00:00');
+const TOTAL_MILES = 1000;
+
+// ── Paste Google Sheet ID here when Oliver shares it ──
+// Example: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms'
+const SHEET_ID = '';
+
+// ── Route list ──
+const ROUTE = [
+  {n:1, name:"Land's End, Cornwall",       desc:"The iconic granite signpost — the journey begins at the south-westernmost tip of England.", mile:"0",    status:"upcoming"},
+  {n:2, name:"Bodmin Moor",                desc:"Wild moorland and ancient standing stones. First real test of the legs.",                  mile:"50",   status:"upcoming"},
+  {n:3, name:"Exeter & Dartmoor",          desc:"High moor, granite tors and unpredictable weather. A serious challenge.",                  mile:"130",  status:"upcoming"},
+  {n:4, name:"Bristol & the Severn",       desc:"Crossing the Severn, navigating busy urban stretches through to Gloucestershire.",         mile:"220",  status:"upcoming"},
+  {n:5, name:"Shropshire & the Marches",   desc:"Rolling Welsh border country — quiet roads, old market towns.",                           mile:"320",  status:"upcoming"},
+  {n:6, name:"Lake District & Cumbria",    desc:"Shap Fell at over 1,000ft — the toughest climb south of the Scottish border.",            mile:"430",  status:"upcoming"},
+  {n:7, name:"Carlisle & the Border",      desc:"Last English miles. The famous blacksmith's forge at Gretna Green.",                      mile:"510",  status:"upcoming"},
+  {n:8, name:"Southern Uplands & Glasgow", desc:"Rolling Scottish hills through the Central Belt.",                                        mile:"620",  status:"upcoming"},
+  {n:9, name:"The Highlands & Loch Ness",  desc:"Some of the most dramatic scenery on Earth. Remote, wild and beautiful.",                 mile:"790",  status:"upcoming"},
+  {n:10,name:"John O'Groats 🏁",           desc:"The finish line. The northernmost point. One thousand miles done.",                       mile:"1000", status:"upcoming"},
+];
+
+const routeList = document.getElementById('route-list');
+ROUTE.forEach(s => {
+  const cls = s.status;
+  const bc  = cls==='done' ? 'badge-done' : cls==='current' ? 'badge-now' : 'badge-next';
+  const bt  = cls==='done' ? '✓ Completed' : cls==='current' ? '📍 Current' : 'Upcoming';
+  routeList.innerHTML += `<div class="route-item ${cls}"><div class="route-num ${cls}">${s.n}</div><div class="route-info"><h4>${s.name}</h4><p>${s.desc}</p></div><div class="route-right"><div class="route-mile">Mile ~${s.mile}</div><span class="route-badge ${bc}">${bt}</span></div></div>`;
+});
+
+// ── Tab switching ──
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ── Walking Stats: wire up Google Sheet when ID is provided ──
+if (SHEET_ID) {
+  const embedUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pubhtml?widget=true&headers=false`;
+  document.getElementById('sheet-iframe').src = embedUrl;
+  document.getElementById('stats-live').style.display = 'block';
+  document.getElementById('stats-placeholder').style.display = 'none';
+}
+
+// ── Countdown (ticks every second) ──
+function updateCountdown() {
+  const diff = START_DATE - new Date();
+  if (diff <= 0) {
+    document.getElementById('countdown-section').style.display = 'none';
+    document.getElementById('progress-miles-text').textContent = 'Walk underway!';
+    return;
+  }
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent  = days;
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+  document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
